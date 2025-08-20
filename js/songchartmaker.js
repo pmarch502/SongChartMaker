@@ -1551,6 +1551,12 @@ function drawPDFSongHeader(doc, lineHeight, finalFont) {
 		x = doc.getTextWidth('Low');
 		doc.text('Low', (maxPageWidth - 50)  + ((50 - x)/2), y - 3);
 		y += h;
+		setPDFColor(doc, '<b>');
+		doc.rect(maxPageWidth - 50, y - h, 50, h, 'F'); // Draw filled rectangle
+		setPDFColor(doc, 'lyric');
+		x = doc.getTextWidth('Both');
+		doc.text('Both', (maxPageWidth - 50)  + ((50 - x)/2), y - 3);
+		y += h;
 		setPDFColor(doc, '<u>');
 		doc.rect(maxPageWidth - 50, y - h, 50, h, 'F'); // Draw filled rectangle
 		setPDFColor(doc, 'lyric');
@@ -1562,12 +1568,6 @@ function drawPDFSongHeader(doc, lineHeight, finalFont) {
 		setPDFColor(doc, 'lyric');
 		x = doc.getTextWidth('All');
 		doc.text('All', (maxPageWidth - 50)  + ((50 - x)/2), y - 3);
-		y += h;
-		setPDFColor(doc, '<b>');
-		doc.rect(maxPageWidth - 50, y - h, 50, h, 'F'); // Draw filled rectangle
-		setPDFColor(doc, 'lyric');
-		x = doc.getTextWidth('Both');
-		doc.text('Both', (maxPageWidth - 50)  + ((50 - x)/2), y - 3);
 		y += h;
 		setPDFColor(doc, '<x>');
 		doc.rect(maxPageWidth - 50, y - h, 50, h, 'F'); // Draw filled rectangle
