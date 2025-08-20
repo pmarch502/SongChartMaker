@@ -40,8 +40,8 @@
 	<!-- jquery - end -->
 
 	<!-- song charts - begin -->
-	<script src="js/songchartmaker.js?t=1755686558647"></script>
-	<link href="css/songchartmaker.css?t=1755686558651" rel="stylesheet">
+	<script src="js/songchartmaker.js?t=1755699184256"></script>
+	<link href="css/songchartmaker.css?t=1755699184261" rel="stylesheet">
 	<!-- song charts - end -->
 </head>
 
@@ -83,9 +83,13 @@
 <!--					<input type="checkbox" value="" id="compactView" onchange="showCompactView()" disabled>-->
 <!--					<label for="compactView" data-tooltip="Toggle between Compact Mode (.chordpro style) and Normal Mode (Chords over lyrics)">Show Compact View</label>-->
 <!--				</td>-->
+<!--				<td>-->
+<!--					<input type="checkbox" value="" id="darkTheme" onchange="drawSong()">-->
+<!--					<label for="darkTheme" data-tooltip="Toggle between Dark Theme (Colored characters on a Black background) and Light Theme (Black characters on a White background)">Dark Theme</label>-->
+<!--				</td>-->
 				<td>
-					<input type="checkbox" value="" id="darkTheme" onchange="drawSong()">
-					<label for="darkTheme" data-tooltip="Toggle between Dark Theme (Colored characters on a Black background) and Light Theme (Black characters on a White background)">Dark Theme</label>
+					<input type="checkbox" value="" id="chordDurations" onchange="drawSong()">
+					<label for="chordDurations" data-tooltip="Toggle display of Chord Durations">Chord Durations</label>
 				</td>
 				<td>
 					<input type="checkbox" value="" id="vocalHighlights" onchange="drawSong()">
@@ -161,7 +165,7 @@
 		<div id="errorOutputDiv">
 			<div data-tooltip="Displays errors in Editor - click to move Editor cursor to error"><input id="errorOutput" onclick="caretToError()" readonly></div>
 		</div>
-		<div class="version">Version: 08/20/2025 05:42:38</div>
+		<div class="version">Version: 08/20/2025 09:13:04</div>
 		<div class="version" id="currSizeInPts"></div>
 	</div>
 
