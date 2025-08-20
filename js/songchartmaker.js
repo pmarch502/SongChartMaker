@@ -1998,7 +1998,7 @@ function drawChordSegment(doc, x, y, lineHeight, chordText, chordLen, typeLen, w
 		setPDFColor(doc, 'chord');
 		doc.text(chordText, x, y);
 	}
-	// Draw duration text (if applicable)
+	// Draw duration text (when applicable)
 	if($('#chordDurations').is(':checked') && durationText.length > 0) {
 		doc.setFontSize(8);
 		setPDFColor(doc, 'chordDuration');
