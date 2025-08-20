@@ -673,6 +673,12 @@ function modifyChordsForTranspose() {
 		while(start >= 0) {
 			let end = copy.indexOf("]", start + 1);
 			let chord = copy.substring(start + 1, end);
+			let durationText = '';
+			let atPos = chord.indexOf('@');
+			if(atPos >= 0) {
+				durationText = chord.substring(atPos);
+				chord = chord.substring(0, atPos);
+			}
 			let note = chord.substring(0, 1);
 			if(chord.charAt(1) === '#' || chord.charAt(1) === 'b' || chord.charAt(1) === 'x') {
 				note = chord.substring(0, 2);
@@ -695,7 +701,7 @@ function modifyChordsForTranspose() {
 					newNote = nnsNames[scaleDegree];
 					chord = chord.substring(0, start2 + 1) + newNote;
 				}
-				copy = copy.substring(0, start + 1) + chord + copy.substring(end);
+				copy = copy.substring(0, start + 1) + chord + durationText + copy.substring(end);
 				start = copy.indexOf("[", start + 1);
 			} else {
 				// do nothing except look for next
@@ -716,6 +722,12 @@ function modifyChordsForTranspose() {
 		while(start >= 0) {
 			let end = copy.indexOf("]", start + 1);
 			let chord = copy.substring(start + 1, end);
+			let durationText = '';
+			let atPos = chord.indexOf('@');
+			if(atPos >= 0) {
+				durationText = chord.substring(atPos);
+				chord = chord.substring(0, atPos);
+			}
 			let note = chord.substring(0, 1);
 			if(chord.charAt(1) === '#' || chord.charAt(1) === 'b' || chord.charAt(1) === 'x') {
 				note = chord.substring(0, 2);
@@ -738,7 +750,7 @@ function modifyChordsForTranspose() {
 					let newNote = keyToChordNameMap[targetKey][scaleDegree];
 					chord = chord.substring(0, start2 + 1) + newNote;
 				}
-				copy = copy.substring(0, start + 1) + chord + copy.substring(end);
+				copy = copy.substring(0, start + 1) + chord + durationText + copy.substring(end);
 				start = copy.indexOf("[", start + 1);
 			} else {// not a chord, just let it remain what it is
 				// do nothing except look for next
@@ -1331,6 +1343,9 @@ function setPDFColor(doc, which) {
 			case 'chordType':
 				doc.setTextColor(255,140,0);
 				break;
+			case 'chordDuration':
+				doc.setTextColor(50,255,255);
+				break;
 			case '<x>':
 				doc.setFillColor(255,235,100);
 				break;
@@ -1405,6 +1420,9 @@ function setPDFColor(doc, which) {
 				break;
 			case 'chordType':
 				doc.setTextColor(0,0,0);
+				break;
+			case 'chordDuration':
+				doc.setTextColor(80,80,80);
 				break;
 			case '<x>':
 				doc.setFillColor(255,235,100);
@@ -1869,6 +1887,12 @@ function tokenizeLine(line) {
 
 function determineChordLocationAttributes(doc, chordStr, finalFont) {
 	let chordText = chordStr.substring(1, chordStr.length - 1);
+	let durationText = '';
+	let atPos = chordText.indexOf('@');
+	if(atPos >= 0) {
+		durationText = chordText.substring(atPos + 1);
+		chordText = chordText.substring(0, atPos);
+	}
 	let chordW = 0;
 	let chordLen = 0;
 	let typeLen = 0;
@@ -1876,54 +1900,46 @@ function determineChordLocationAttributes(doc, chordStr, finalFont) {
 	let wType = 0;
 	let wSlash = 0;
 	let slashPos = -1;
-	if($("#chordKeySelect").find(":selected").text() === 'NNS') {
-		setPDFFont(doc, 'sans', 'bold');
-		chordW = doc.getTextWidth(chordText);
-		wChord = chordW;
-		wType = 0;
-		wSlash = 0;
-	} else {
-		if(chordText[0] >= 'A' && chordText[0] <= 'G') {
-			if(chordText.length > 1 && "b#x".indexOf(chordText[1]) >= 0) {
-				if(chordText.length > 2 && chordText[2] === 'b') {
-					chordLen = 3;
-				} else {
-					chordLen = 2;
-				}
+	if(($("#chordKeySelect").find(":selected").text() === 'NNS' && ((chordText[0] >= '1' && chordText[0] <= '7') || (chordText[0] === 'b' && chordText[1] >= '1' && chordText[1] <= '7'))) || (chordText[0] >= 'A' && chordText[0] <= 'G')) {
+		if(chordText.length > 1 && "b#x".indexOf(chordText[1]) >= 0) {
+			if(chordText.length > 2 && chordText[2] === 'b') {
+				chordLen = 3;
 			} else {
-				chordLen = 1;
+				chordLen = 2;
 			}
-		}
-		if(chordLen === 0) {// default
-			chordLen = chordText.length;
-		}
-		// Calculate width
-		typeLen = chordText.length - chordLen;
-		slashPos = chordText.indexOf('/');
-		if(slashPos >= 0) {
-			typeLen = slashPos - chordLen;
-		}
-		setPDFFont(doc, 'sans', 'bold');
-		chordW = doc.getTextWidth(chordText);
-		wChord = chordW;
-		wType = 0;
-		wSlash = 0;
-		if(typeLen > 0) {
-			chordW = doc.getTextWidth(chordText.substring(0, chordLen));
-			wChord = chordW;
-			doc.setFontSize(finalFont * 0.80);
-			wType = doc.getTextWidth(chordText.substring(chordLen, chordLen + typeLen));
-			chordW += wType;
-			doc.setFontSize(finalFont);
-			if(slashPos > 0) {
-				wSlash = doc.getTextWidth(chordText.substring(slashPos) + '  ');
-			} else {
-				wSlash = doc.getTextWidth('  ');
-			}
-			chordW += wSlash;
+		} else {
+			chordLen = 1;
 		}
 	}
-	return [chordText, chordLen, typeLen, wChord, wType, wSlash, slashPos];
+	if(chordLen === 0) {// default
+		chordLen = chordText.length;
+	}
+	// Calculate width
+	typeLen = chordText.length - chordLen;
+	slashPos = chordText.indexOf('/');
+	if(slashPos >= 0) {
+		typeLen = slashPos - chordLen;
+	}
+	setPDFFont(doc, 'sans', 'bold');
+	chordW = doc.getTextWidth(chordText);
+	wChord = chordW;
+	wType = 0;
+	wSlash = 0;
+	if(typeLen > 0) {
+		chordW = doc.getTextWidth(chordText.substring(0, chordLen));
+		wChord = chordW;
+		doc.setFontSize(finalFont * 0.80);
+		wType = doc.getTextWidth(chordText.substring(chordLen, chordLen + typeLen));
+		chordW += wType;
+		doc.setFontSize(finalFont);
+		if(slashPos > 0) {
+			wSlash = doc.getTextWidth(chordText.substring(slashPos) + '  ');
+		} else {
+			wSlash = doc.getTextWidth('  ');
+		}
+		chordW += wSlash;
+	}
+	return [chordText, chordLen, typeLen, wChord, wType, wSlash, slashPos, durationText];
 }
 
 function tokenizeString(str) {
@@ -1963,7 +1979,7 @@ function drawLyricSegment(doc, oldX, x, y, w, lineHeight, lyric, highlight) {
 	doc.text(lyric, x, pdfY);// str, x, y
 }
 
-function drawChordSegment(doc, x, y, lineHeight, chordText, chordLen, typeLen, wChord, wType, wSlash, slashPos, finalFont) {
+function drawChordSegment(doc, x, y, lineHeight, chordText, chordLen, typeLen, wChord, wType, wSlash, slashPos, durationText, finalFont) {
 	setPDFFont(doc, 'sans', 'bold');
 	if(typeLen > 0) {
 		setPDFColor(doc, 'chord');
@@ -1981,6 +1997,16 @@ function drawChordSegment(doc, x, y, lineHeight, chordText, chordLen, typeLen, w
 	} else {
 		setPDFColor(doc, 'chord');
 		doc.text(chordText, x, y);
+	}
+	// Draw duration text (if applicable)
+	if($('#chordDurations').is(':checked') && durationText.length > 0) {
+		doc.setFontSize(8);
+		setPDFColor(doc, 'chordDuration');
+		let w = doc.getTextWidth(durationText)
+		doc.text(durationText, x - w, y);
+		// reset
+		doc.setFontSize(finalFont);
+		setPDFColor(doc, 'chord');
 	}
 	return wChord + wSlash + wType;
 }
@@ -2011,8 +2037,8 @@ function drawChordsAndLyrics(doc, line, lineHeight, finalFont) {
 		for (let i = 0; i < tokens.length; i++) {
 			let tokenArr = tokens[i];
 			if(tokenArr[0].startsWith('[') && tokenArr[0].endsWith(']')) {// chord
-				let chordAttrsArr = determineChordLocationAttributes(doc, tokenArr[0], finalFont);// chordText, chordLen, typeLen, wChord, wType, wSlash, slashPos
-				let w = drawChordSegment(doc, currChordsX, chordsY, lineHeight, chordAttrsArr[0], chordAttrsArr[1], chordAttrsArr[2], chordAttrsArr[3], chordAttrsArr[4], chordAttrsArr[5], chordAttrsArr[6], finalFont);
+				let chordAttrsArr = determineChordLocationAttributes(doc, tokenArr[0], finalFont);// chordText, chordLen, typeLen, wChord, wType, wSlash, slashPos, durationText
+				let w = drawChordSegment(doc, currChordsX, chordsY, lineHeight, chordAttrsArr[0], chordAttrsArr[1], chordAttrsArr[2], chordAttrsArr[3], chordAttrsArr[4], chordAttrsArr[5], chordAttrsArr[6], chordAttrsArr[7], finalFont);
 				currChordsX += w;
 				let nextTokArr = ((i < tokens.length - 1) ? tokens[i + 1] : ['','']);
 				if(/^\s+$/.test(nextTokArr[0])) {// spaces only
