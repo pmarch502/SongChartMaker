@@ -40,8 +40,8 @@
 	<!-- jquery - end -->
 
 	<!-- song charts - begin -->
-	<script src="js/songchartmaker.js?t=1746637396225"></script>
-	<link href="css/songchartmaker.css?t=1746637396229" rel="stylesheet">
+	<script src="js/songchartmaker.js?t=1755686558647"></script>
+	<link href="css/songchartmaker.css?t=1755686558651" rel="stylesheet">
 	<!-- song charts - end -->
 </head>
 
@@ -87,12 +87,16 @@
 					<input type="checkbox" value="" id="darkTheme" onchange="drawSong()">
 					<label for="darkTheme" data-tooltip="Toggle between Dark Theme (Colored characters on a Black background) and Light Theme (Black characters on a White background)">Dark Theme</label>
 				</td>
+				<td>
+					<input type="checkbox" value="" id="vocalHighlights" onchange="drawSong()">
+					<label for="vocalHighlights" data-tooltip="Toggle display of Vocal Highlights">Display Vocal Highlights</label>
+				</td>
 			</tr>
 		</table>
 		<table id="editTable">
 			<tr>
 				<td style="align-content: start;padding-top: 15px;">
-					<div class="editSample" style="text-decoration-line: underline;color:rgba(255,255,0,0.6);"><i>Double click to insert at cursor...</i></div>
+					<div class="editSample" style="text-decoration-line: underline;color:rgba(255,255,0,0.6);" data-tooltip="Double-click to insert song directive"><i>Song Directives</i></div>
 					<div class="editSample" ondblclick="insertText('{title:Song}')">{title:Song}</div>
 					<div class="editSample" ondblclick="insertText('{key:C}')">{key:C}</div>
 					<div class="editSample" ondblclick="insertText('{time:4/4}')">{time:4/4}</div>
@@ -117,6 +121,15 @@
 						<textarea id="chartEditorTextArea" rows="30" cols="90" placeholder="Enter ChordPro song data here..." ondragover="dragOverHandler(event);" ondrop="dropHandler(event);" oninput="textAreaInput();"></textarea>
 						<div class="editor-separator"></div>
 					</div>
+				</td>
+				<td style="align-content: start;padding-top: 15px;">
+					<div class="editSample" style="text-decoration-line: underline;color:rgba(255,255,0,0.6);" data-tooltip="Double-click to insert Vocal Highlight tags"><i>Vocal Highlights</i></div>
+					<div class="editSample" ondblclick="wrapText('h')">&lt;h&gt;&nbsp;(High)</div>
+					<div class="editSample" ondblclick="wrapText('l')">&lt;l&gt;&nbsp;(Low)</div>
+					<div class="editSample" ondblclick="wrapText('u')">&lt;u&gt;&nbsp;(Unison)</div>
+					<div class="editSample" ondblclick="wrapText('a')">&lt;a&gt;&nbsp;(All)</div>
+					<div class="editSample" ondblclick="wrapText('b')">&lt;b&gt;&nbsp;(Both)</div>
+					<div class="editSample" ondblclick="wrapText('x')">&lt;x&gt;&nbsp;(Special)</div>
 				</td>
 			</tr>
 		</table>
@@ -148,7 +161,7 @@
 		<div id="errorOutputDiv">
 			<div data-tooltip="Displays errors in Editor - click to move Editor cursor to error"><input id="errorOutput" onclick="caretToError()" readonly></div>
 		</div>
-		<div class="version">Version: 05/07/2025 12:03:16</div>
+		<div class="version">Version: 08/20/2025 05:42:38</div>
 		<div class="version" id="currSizeInPts"></div>
 	</div>
 
