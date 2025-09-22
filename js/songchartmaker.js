@@ -2053,7 +2053,12 @@ function drawChordsAndLyrics(doc, line, lineHeight, finalFont) {
 					oldLyricsX = -1;
 				}
 				currLyricsX += w;
-				currChordsX = Math.max(currLyricsX, currChordsX);
+				if(currLyricsX < currChordsX) {// curr chord is longer than curr lyrics
+					//currChordsX += doc.getTextWidth(" ");
+					currLyricsX = currChordsX;
+				} else {
+					currChordsX = Math.max(currLyricsX, currChordsX);
+				}
 			}
 		}
 		currPDFLongestLine = Math.max(currPDFLongestLine, Math.max(currLyricsX, currChordsX));
