@@ -2008,7 +2008,7 @@ function drawChordSegment(doc, x, y, lineHeight, chordText, chordLen, typeLen, w
 		doc.setFontSize(finalFont);
 		setPDFColor(doc, 'chord');
 	}
-	return wChord + wSlash + wType;
+	return slashPos > 0 ? (wChord + wSlash + wType) : (wChord + wType);
 }
 
 function drawChordsAndLyrics(doc, line, lineHeight, finalFont) {
@@ -2053,8 +2053,9 @@ function drawChordsAndLyrics(doc, line, lineHeight, finalFont) {
 					oldLyricsX = -1;
 				}
 				currLyricsX += w;
-				if(currLyricsX < currChordsX) {// curr chord is longer than curr lyrics
-					//currChordsX += doc.getTextWidth(" ");
+				let moreLyrics = (tokens.length > (i + 1)) && !tokens[i+1][0].startsWith('[');
+				if(!moreLyrics && currLyricsX < currChordsX) {// curr chord is wider than curr lyrics
+					currChordsX += doc.getTextWidth("  ");
 					currLyricsX = currChordsX;
 				} else {
 					currChordsX = Math.max(currLyricsX, currChordsX);
