@@ -40,10 +40,19 @@
 	<!-- jquery - end -->
 
 	<!-- song charts - begin -->
-	<script src="js/songchartmaker.js?t=1758887976856"></script>
-	<link href="css/songchartmaker.css?t=1758887976861" rel="stylesheet">
+	<script src="js/songchartmaker.js?t=1758889965483"></script>
+	<link href="css/songchartmaker.css?t=1758889965488" rel="stylesheet">
 	<!-- song charts - end -->
 </head>
+
+<!--This is using a service worker in an attempt to ensure the index.html isn't cached-->
+<!--The meta tags don't work on GitHub-->
+<!--This utilizes the sw.js file-->
+<script>
+	if ('serviceWorker' in navigator) {
+		navigator.serviceWorker.register('/sw.js');
+	}
+</script>
 
 <body>
 <!-- The main div that wraps everything -->
@@ -167,7 +176,7 @@
 		<div id="errorOutputDiv">
 			<div data-tooltip="Displays errors in Editor - click to move Editor cursor to error"><input id="errorOutput" onclick="caretToError()" readonly></div>
 		</div>
-		<div class="version">Version: 09/26/2025 06:59:36</div>
+		<div class="version">Version: 09/26/2025 07:32:45</div>
 		<div class="version" id="currSizeInPts"></div>
 	</div>
 
