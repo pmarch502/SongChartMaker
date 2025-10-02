@@ -81,6 +81,11 @@ let lastCreatedDoc = null;
 let lastDroppedFileName = "New Song.chordpro";
 let droppedFileContent = '';
 
+let svgEighth = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n' +
+	'<svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="90" height="90">\n' +
+	'\t<path d="M 23.7,87.9 C 18.1,82.8 21.2,74.7 30.4,69.9 C 33.5,68.4 35.8,67.7 39.8,67.8 C 42.3,67.9 45.1,69.3 45.1,69.3 C 45.1,51.2 45.0,17.0 45.0,0.2 C 46.0,0.2 46.7,0.1 48.1,0.1 C 48.1,1.1 48.1,1.9 48.1,2.7 C 48.1,3.6 48.1,4.1 48.2,4.7 C 49.2,11.0 50.6,13.5 57.6,21.2 C 66.5,31.1 69.1,37.0 69.1,44.9 C 69.0,52.3 62.5,68.1 61.1,67.5 C 63.1,61.9 65.9,55.9 66.6,50.9 C 67.5,44.8 65.0,36.2 61.0,31.7 C 57.8,27.9 50.2,24.6 48.1,24.6 C 48.1,24.6 48.0,61.0 48.0,74.8 C 48.0,77.1 45.9,81.2 44.7,82.6 C 39.2,89.2 28.5,92.2 23.7,87.9 z"/>\n' +
+	'</svg>';
+
 /* Sets up text editor for UI and 'fixes' print anomaly */
 $(function() {
 	// Size textarea and draw 80 char guide line
@@ -1980,6 +1985,7 @@ function drawLyricSegment(doc, oldX, x, y, w, lineHeight, lyric, highlight) {
 }
 
 function drawChordSegment(doc, x, y, lineHeight, chordText, chordLen, typeLen, wChord, wType, wSlash, slashPos, durationText, finalFont) {
+	// Set the font
 	setPDFFont(doc, 'sans', 'bold');
 	if(typeLen > 0) {
 		setPDFColor(doc, 'chord');
@@ -1999,7 +2005,11 @@ function drawChordSegment(doc, x, y, lineHeight, chordText, chordLen, typeLen, w
 		doc.text(chordText, x, y);
 	}
 	// Draw duration text (when applicable)
+	// w = whole,           h = half,   q = quarter,   e = eighth,   s = sixteenth
+	// t = thirty-second,   . = dot,    3 = triplet,   - = tie,      // = stop
+	// (. = fermata
 	if($('#chordDurations').is(':checked') && durationText.length > 0) {
+		let char = durationText.charAt(0);
 		doc.setFontSize(8);
 		setPDFColor(doc, 'chordDuration');
 		let w = doc.getTextWidth(durationText)
@@ -2065,136 +2075,6 @@ function drawChordsAndLyrics(doc, line, lineHeight, finalFont) {
 		currPDFLongestLine = Math.max(currPDFLongestLine, Math.max(currLyricsX, currChordsX));
 	}
 }
-
-/* Save this - just in case */
-// function drawChordsAndLyrics_preVocalHighlighting(doc, line, lineHeight, finalFont) {
-// 	if(line.indexOf('[') < 0) {// lyrics only
-// 		pdfY += lineHeight;
-// 		let w = doc.getTextWidth(line);
-// 		currPDFLongestLine = Math.max(currPDFLongestLine, (w + 20));
-// 		setPDFColor(doc, 'lyric');
-// 		doc.text(line, 20, pdfY);// str, x, y
-// 	} else {// chords and lyrics
-// 		pdfY += lineHeight;
-// 		let chordsY = pdfY;
-// 		pdfY += lineHeight;
-// 		let lyricsY = pdfY;
-// 		let currX = 20;
-//
-// 		let pos = 0;
-// 		let segments = [];
-// 		for(let i = 1; i < line.length; i++) {
-// 			if(line[i] === '[') {
-// 				segments.push(line.substring(pos, i));
-// 				pos = i;
-// 			}
-// 			if(line[i] === ']' && line[i + 1] === ' ') {
-// 				segments.push(line.substring(pos, i + 2));
-// 				pos = i + 1;
-// 			}
-// 		}
-// 		if(pos < line.length) {
-// 			segments.push(line.substring(pos));
-// 		}
-// 		for(let i = 0; i < segments.length; i++) {
-// 			let seg = segments[i];
-// 			if(seg[0] === '[') {// starts with a chord
-// 				let chordText = seg.substring(1, seg.indexOf(']'));
-// 				let lyricText = seg.substring(seg.indexOf(']') + 1);
-// 				let chordW = 0;
-// 				let chordLen = 0;
-// 				let typeLen = 0;
-// 				let wChord = 0;
-// 				let wType = 0;
-// 				let wSlash = 0;
-// 				let slashPos = -1;
-// 				if($("#chordKeySelect").find(":selected").text() === 'NNS') {
-// 					setPDFFont(doc, 'sans', 'bold');
-// 					chordW = lyricText === ' ' ? doc.getTextWidth(chordText) : doc.getTextWidth(chordText + '  ');// adding two spaces to width so chords don't get jumbled
-// 					wChord = chordW;
-// 					wType = 0;
-// 					wSlash = 0;
-// 				} else {
-// 					if(chordText[0] >= 'A' && chordText[0] <= 'G') {
-// 						if(chordText.length > 1 && "b#x".indexOf(chordText[1]) >= 0) {
-// 							if(chordText.length > 2 && chordText[2] === 'b') {
-// 								chordLen = 3;
-// 							} else {
-// 								chordLen = 2;
-// 							}
-// 						} else {
-// 							chordLen = 1;
-// 						}
-// 					}
-// 					if(chordLen === 0) {
-// 						chordLen = chordText.length;
-// 					}
-// 					// Calculate width
-// 					typeLen = chordText.length - chordLen;
-// 					slashPos = chordText.indexOf('/');
-// 					if(slashPos >= 0) {
-// 						typeLen = slashPos - chordLen;
-// 					}
-// 					setPDFFont(doc, 'sans', 'bold');
-// 					chordW = lyricText === ' ' ? doc.getTextWidth(chordText) : doc.getTextWidth(chordText + '  ');// adding two spaces to width so chords don't get jumbled
-// 					wChord = chordW;
-// 					wType = 0;
-// 					wSlash = 0;
-// 					if(typeLen > 0) {
-// 						chordW = doc.getTextWidth(chordText.substring(0, chordLen));
-// 						wChord = chordW;
-// 						doc.setFontSize(finalFont * 0.80);
-// 						wType = doc.getTextWidth(chordText.substring(chordLen, chordLen + typeLen));
-// 						chordW += wType;
-// 						doc.setFontSize(finalFont);
-// 						if(slashPos > 0) {
-// 							wSlash = doc.getTextWidth(chordText.substring(slashPos) + '  ');
-// 						} else {
-// 							wSlash = doc.getTextWidth('  ');
-// 						}
-// 						chordW += wSlash;
-// 					}
-// 				}
-// 				setPDFFont(doc, 'sans', 'normal');
-// 				let lyricW = doc.getTextWidth(lyricText);
-// 				let w = Math.max(chordW, lyricW);
-// 				//console.log(lyricText + ': ' + lyricW + ', ' + chordText + ': ' + chordW);
-//
-// 				// Draw
-// 				setPDFFont(doc, 'sans', 'bold');
-// 				if(typeLen > 0) {
-// 					setPDFColor(doc, 'chord');
-// 					doc.text(chordText.substring(0, chordLen), currX, chordsY);// chord
-// 					doc.setFontSize(finalFont * 0.80);
-// 					setPDFColor(doc, 'chordType');
-// 					doc.text(chordText.substring(chordLen, chordLen + typeLen), currX + wChord, chordsY - (lineHeight * 0.15));// chordType
-// 					doc.setFontSize(finalFont);
-// 					setPDFColor(doc, 'chord');
-// 					if(slashPos > 0) {
-// 						doc.text(chordText.substring(slashPos) + '  ', currX + wChord + wType, chordsY);// slash
-// 					} else {
-// 						doc.text('  ', currX + wChord + wType, chordsY);
-// 					}
-// 				} else {
-// 					setPDFColor(doc, 'chord');
-// 					doc.text(chordText, currX, chordsY);
-// 				}
-// 				setPDFFont(doc, 'sans', 'normal');
-// 				setPDFColor(doc, 'lyric');
-// 				doc.text(lyricText, currX, lyricsY);
-// 				//console.log('"' + lyricText + '": ' + w + ', currX: ' + currX);
-// 				currX += w;
-// 			} else {// lyrics only (beginning of line)
-// 				let w = doc.getTextWidth(seg);
-// 				setPDFColor(doc, 'lyric');
-// 				doc.text(seg, currX, lyricsY);
-// 				//console.log('"' + seg + '": ' + w + ', currX: ' + currX);
-// 				currX += w;
-// 			}
-// 		}
-// 		currPDFLongestLine = Math.max(currPDFLongestLine, currX);
-// 	}
-// }
 
 function drawChordPro(doc, line, lineHeight, finalFont) {
 	if(line.indexOf('[') < 0) {// lyrics only
