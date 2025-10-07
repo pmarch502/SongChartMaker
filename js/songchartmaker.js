@@ -1345,6 +1345,8 @@ function setPDFColor(doc, which) {
 				break;
 			case 'chordDuration':
 				doc.setTextColor(50,255,255);
+				doc.setDrawColor(50,255,255);
+				doc.setFillColor(50,255,255);
 				break;
 			case '<x>':
 				doc.setFillColor(255,235,100);
@@ -1423,6 +1425,8 @@ function setPDFColor(doc, which) {
 				break;
 			case 'chordDuration':
 				doc.setTextColor(80,80,80);
+				doc.setDrawColor(80,80,80);
+				doc.setFillColor(80,80,80);
 				break;
 			case '<x>':
 				doc.setFillColor(255,235,100);
@@ -2000,16 +2004,11 @@ function drawChordSegment(doc, x, y, lineHeight, chordText, chordLen, typeLen, w
 		doc.text(chordText, x, y);
 	}
 	// Draw duration text (when applicable)
-	// w = whole,           h = half,   q = quarter,   e = eighth,   s = sixteenth
-	// t = thirty-second,   . = dot,    3 = triplet,   - = tie,      // = stop
-	// (. = fermata
+	// w = whole,   h = half,   q = quarter,   e = eighth,    s = sixteenth
+	// . = dot,     - = tie,    ! = stop,      ~ = fermata,   3 = triplet
 	if($('#chordDurations').is(':checked') && durationText.length > 0) {
-		let char = durationText.charAt(0);
-		doc.setFontSize(8);
-		setPDFColor(doc, 'chordDuration');
-		let w = doc.getTextWidth(durationText)
-		doc.text(durationText, x - w, y);
-		// reset
+		drawChordDuration(durationText, doc, x, y);
+		// reset, just in case
 		doc.setFontSize(finalFont);
 		setPDFColor(doc, 'chord');
 	}
@@ -2069,6 +2068,186 @@ function drawChordsAndLyrics(doc, line, lineHeight, finalFont) {
 		}
 		currPDFLongestLine = Math.max(currPDFLongestLine, Math.max(currLyricsX, currChordsX));
 	}
+}
+
+function drawChordDuration(durationText, doc, x, y) {
+	const dims = {
+		'b': { w: 10, h: 8 },// breve
+		'w': { w: 10, h: 8 },// whole
+		'w.': { w: 12.5, h: 8 },// dotted whole
+		'h': { w: 10, h: 18 },// half
+		'h.': { w: 12.5, h: 18 },// dotted half
+		'q': { w: 8.5, h: 18 },// quarter
+		'q.': { w: 11.5, h: 18 },// dotted quarter
+		'e': { w: 12, h: 18 },// eighth
+		'e.': { w: 12, h: 18 },// dotted eighth
+		's': { w: 12, h: 18 },// sixteenth
+		's.': { w: 12, h: 18 },// dotted sixteenth
+		'-': { w: 6, h: 3.5 },// tie
+		'~': { w: 11.5, h: 6.5 },// fermata (hold)
+		'!': { w: 13, h: 12 }// caesura (stop)
+	};
+	let between = 2;
+	setPDFColor(doc, 'chordDuration');
+	doc.setLineWidth(1.5);
+
+	let segments = [];
+	for(let i = 0; i < durationText.length; i++) {
+		let c = durationText[i];
+		if(c === 'w' || c === 'h' || c === 'q' || c === 'e' || c === 's') {
+			if(durationText[i + 1] === '.') {
+				segments.push(durationText.substring(i, i + 2));
+				i++;
+			} else {
+				segments.push(durationText.substring(i, i + 1));
+			}
+		} else {
+			segments.push(durationText.substring(i, i + 1));
+		}
+	}
+
+	let _x = x + 6;
+	let _y = y - 5;
+	for(let i = segments.length - 1; i >= 0; i--) {
+		let seg = segments[i];
+		_x -= (seg === '-' ? dims[seg].w : (dims[seg].w + between));
+		switch(seg) {
+			case 'b':
+				drawBreve(doc, _x, _y);
+				break;
+			case 'w':
+				drawWhole(doc, _x, _y);
+				break;
+			case 'w.':
+				drawDottedWhole(doc, _x, _y);
+				break;
+			case 'h':
+				drawHalf(doc, _x, _y);
+				break;
+			case 'h.':
+				drawDottedHalf(doc, _x, _y);
+				break;
+			case 'q':
+				drawQuarter(doc, _x, _y);
+				break;
+			case 'q.':
+				drawDottedQuarter(doc, _x, _y);
+				break;
+			case 'e':
+				drawEighth(doc, _x, _y);
+				break;
+			case 'e.':
+				drawDottedEighth(doc, _x, _y);
+				break;
+			case 's':
+				drawSixteenth(doc, _x, _y);
+				break;
+			case 's.':
+				drawDottedSixteenth(doc, _x, _y);
+				break;
+			case '-':
+				drawTie(doc, _x, _y);
+				break;
+			case '!':
+				drawCaesura(doc, _x, _y);
+				break;
+			case '~':
+				drawFermata(doc, _x, _y);
+				break;
+		}
+	}
+}
+
+function drawFermata(doc, x, y) {
+	doc.path([
+		{ op: "m", c: [x - 5, y + 2] },
+		{ op: "c", c: [x - 2.5, y - 4, x + 2.5, y - 4, x + 5, y + 2] } // Bezier for curve
+	]).stroke();
+	doc.circle(x, y + 1, 1.5, 'F');// Dot
+}
+
+function drawTie(doc, x, y) {
+	doc.path([
+		{ op: "m", c: [x - 5, y + 3] },
+		{ op: "c", c: [x - 3.5, y + 5, x - 1.5, y + 5, x, y + 3] } // Bezier for curve
+	]).stroke();
+}
+
+function drawBreve(doc, x, y) {
+	drawWhole(doc, x, y);
+	doc.line(x - 4.5, y - 4, x - 4.5, y + 4); // Left stem
+	doc.line(x + 4.5, y - 4, x + 4.5, y + 4); // Right stem
+}
+
+function drawWhole(doc, x, y) {
+	doc.ellipse(x, y, 3.5, 2.3, 'S'); // Hollow oval notehead
+}
+
+function drawDottedWhole(doc, x, y) {
+	drawWhole(doc, x, y);
+	doc.circle(x + 6, y + 2, 1.25, 'F'); // Dot to the right
+}
+
+function drawHalf(doc, x, y) {
+	drawWhole(doc, x, y);
+	doc.line(x + 3.5, y, x + 3.5, y - 14); // Stem up
+}
+
+function drawDottedHalf(doc, x, y) {
+	drawHalf(doc, x, y);
+	doc.circle(x + 6, y + 2, 1.25, 'F'); // Dot to the right
+}
+
+function drawQuarter(doc, x, y) {
+	doc.ellipse(x, y, 4, 2.8, 'F'); // Filled oval notehead
+	doc.line(x + 3.5, y, x + 3.5, y - 14); // Stem up
+}
+
+function drawDottedQuarter(doc, x, y) {
+	drawQuarter(doc, x, y);
+	doc.circle(x + 6, y + 2, 1.25, 'F'); // Dot to the right
+}
+
+function drawEighth(doc, x, y) {
+	drawQuarter(doc, x, y);
+	doc.setLineWidth(1.5);
+	doc.path([
+		{ op: "m", c: [x + 3.5, y - 13.5] },
+		{ op: "l", c: [x + 7, y - 10.5] },
+		{ op: "l", c: [x + 6, y - 3.5] }
+	]).stroke(); // Single flag
+}
+
+function drawDottedEighth(doc, x, y) {
+	drawEighth(doc, x, y);
+	doc.circle(x + 6, y + 2, 1.25, 'F'); // Dot to the right
+}
+
+function drawSixteenth(doc, x, y) {
+	drawQuarter(doc, x, y);
+	doc.setLineWidth(1);
+	doc.setLineWidth(1.5);
+	doc.path([
+		{ op: "m", c: [x + 3.5, y - 13.5] },
+		{ op: "l", c: [x + 7, y - 10.5] },
+		{ op: "l", c: [x + 6, y - 3.5] }
+	]).stroke(); // First flag
+	doc.setLineWidth(1.5);
+	doc.path([
+		{ op: "m", c: [x + 3.5, y - 10] },
+		{ op: "l", c: [x + 7, y - 7] }
+	]).stroke(); // Second flag
+}
+
+function drawDottedSixteenth(doc, x, y) {
+	drawSixteenth(doc, x, y);
+	doc.circle(x + 6, y + 2, 1.25, 'F'); // Dot to the right
+}
+
+function drawCaesura(doc, x, y) {
+	doc.setLineWidth(1.5);
+	doc.line(x - 3, y + 2, x + 3, y - 8); // First diagonal
+	doc.line(x, y + 2, x + 6, y - 8); // Second diagonal
 }
 
 function drawChordPro(doc, line, lineHeight, finalFont) {
