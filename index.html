@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!-- meta - begin -->
+	<!-- The following 3 meta tags *must* come first in the head; any other head content must come *after* these tags - Bootstrap -->
+	<meta charset="utf-8">
+	<meta content="IE=edge" http-equiv="X-UA-Compatible">
+	<meta content="width=device-width, initial-scale=1" name="viewport">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags - Bootstrap -->
+
+	<!-- The following 3 meta tags are intended to ensure the user gets the latest version -->
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="0">
+	<!-- The above 3 meta tags are intended to ensure the user gets the latest version -->
+
+	<meta content="Song Charts made easy for RLC" name="description">
+	<meta content="chord charts, songs,lyrics,chords,transpose,nashville number system,scale degrees" name="keywords">
+	<meta content="Paul March" name="author">
+	<!-- meta - end -->
+
+	<title>Song Chart Maker</title>
+
+	<!-- Inconsolata and Roboto Fonts - begin -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+	<!-- Inconsolata and Roboto Fonts - end -->
+
+	<!-- favicon.ico - begin -->
+	<link rel="icon" href="RLC_favicon.png" type="image/png" />
+	<!-- favicon.ico - end -->
+
+	<!-- jsPDF - begin -->
+	<script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+	<!-- jsPDF - end -->
+
+	<!-- jquery - begin -->
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	<!-- jquery - end -->
+
+	<!-- song charts - begin -->
+	<script src="js/songchartmaker.js?t=1762888132762"></script>
+	<link href="css/songchartmaker.css?t=1762888132766" rel="stylesheet">
+	<!-- song charts - end -->
+</head>
+
+<body>
+<!-- The main div that wraps everything -->
+<div id="mainDiv">
+
+	<!-- The song editor displays here -->
+	<div id="editDiv">
+		<span class="editDivDocs" data-tooltip="Display the Documentation page" onclick="displayDocs();">&nbsp; &#8505; &nbsp;</span>
+		<span class="editDivClose" data-tooltip="Toggle this Editor" onclick="toggleEditor();">&#x25B2;</span>
+		<h1 class="textCenter" id="editDivTitle">&nbsp; Chart Editor</h1>
+		<table id="optionsTable">
+			<tr>
+				<td>
+					<label for="chordKeySelect" data-tooltip="Select the Key, Scale Degrees (NNS), or No Chords for the Song Chart display">Select Display Key:</label>
+					<select id="chordKeySelect" onchange="chordKeyChange()">
+						<option>No Chords</option>
+						<option selected>Original</option>
+						<option>NNS</option>
+						<option>Ab (Fm)</option>
+						<option>A  (F#m)</option>
+						<option>Bb (Gm)</option>
+						<option>B  (G#m)</option>
+						<option>Cb (Abm)</option>
+						<option>C  (Am)</option>
+						<option>C# (A#m)</option>
+						<option>Db (Bbm)</option>
+						<option>D  (Bm)</option>
+						<option>Eb (Cm)</option>
+						<option>E  (C#m)</option>
+						<option>F  (Dm)</option>
+						<option>F# (D#m)</option>
+						<option>Gb (Ebm)</option>
+						<option>G  (Em)</option>
+					</select>
+				</td>
+
+<!--				<td>-->
+<!--					<input type="checkbox" value="" id="compactView" onchange="showCompactView()" disabled>-->
+<!--					<label for="compactView" data-tooltip="Toggle between Compact Mode (.chordpro style) and Normal Mode (Chords over lyrics)">Show Compact View</label>-->
+<!--				</td>-->
+<!--				<td>-->
+<!--					<input type="checkbox" value="" id="darkTheme" onchange="drawSong()">-->
+<!--					<label for="darkTheme" data-tooltip="Toggle between Dark Theme (Colored characters on a Black background) and Light Theme (Black characters on a White background)">Dark Theme</label>-->
+<!--				</td>-->
+
+				<td>
+					<input type="checkbox" value="" id="chordDurations" onchange="drawSong()" checked>
+					<label for="chordDurations" data-tooltip="Toggle display of Chord Durations">Display Chord Durations</label>
+				</td>
+				<td>
+					<input type="checkbox" value="" id="vocalHighlights" onchange="drawSong()" checked>
+					<label for="vocalHighlights" data-tooltip="Toggle display of Vocal Highlights">Display Vocal Highlights</label>
+				</td>
+			</tr>
+		</table>
+		<table id="editTable">
+			<tr>
+				<td style="align-content: start;padding-top: 15px;">
+					<div class="editSample" style="text-decoration-line: underline;color:rgba(255,255,0,0.6);" data-tooltip="Double-click to insert song directive"><i>Song Directives</i></div>
+					<div class="editSample" ondblclick="insertText('{title:Song}')">{title:Song}</div>
+					<div class="editSample" ondblclick="insertText('{key:C}')">{key:C}</div>
+					<div class="editSample" ondblclick="insertText('{time:4/4}')">{time:4/4}</div>
+					<div class="editSample" ondblclick="insertText('{tempo:80}')">{tempo:80}</div>
+					<div class="editSample" ondblclick="insertText('{capo:2}')">{capo:2}</div>
+					<div class="editSample" ondblclick="insertText('{comment:Comment}')">{comment:Comment}</div>
+					<div class="editSample" ondblclick="insertText('{comment_italic:Comment}')">{comment_italic:Comment}</div>
+					<div class="editSample" ondblclick="insertText('{comment_box:Comment}')">{comment_box:Comment}</div>
+					<div class="editSample" ondblclick="insertText('{start_of_verse:Verse}')">{start_of_verse:Verse}</div>
+					<div class="editSample" ondblclick="insertText('{start_of_bridge:Bridge}')">{start_of_bridge:Bridge}</div>
+					<div class="editSample" ondblclick="insertText('{start_of_chorus:Chorus}')">{start_of_chorus:Chorus}</div>
+					<div class="editSample" ondblclick="insertText('{end_of_verse}')">{end_of_verse}</div>
+					<div class="editSample" ondblclick="insertText('{end_of_bridge}')">{end_of_bridge}</div>
+					<div class="editSample" ondblclick="insertText('{end_of_chorus}')">{end_of_chorus}</div>
+					<div class="editSample" ondblclick="insertText('{verse:Verse}')">{verse:Verse}</div>
+					<div class="editSample" ondblclick="insertText('{bridge:Bridge}')">{bridge:Bridge}</div>
+					<div class="editSample" ondblclick="insertText('{chorus:Chorus}')">{chorus:Chorus}</div>
+					<div class="editSample" ondblclick="insertText('{transpose:+2}')">{transpose:+2}</div>
+				</td>
+				<td style="align-content: start;">
+					<div class="editorDiv">
+						<textarea id="chartEditorTextArea" rows="30" cols="90" placeholder="Enter ChordPro song data here..." ondragover="dragOverHandler(event);" ondrop="dropHandler(event);" oninput="textAreaInput();"></textarea>
+						<div class="editor-separator"></div>
+					</div>
+				</td>
+				<td style="align-content: start;padding-top: 15px;">
+					<div class="editSample" style="text-decoration-line: underline;color:rgba(255,255,0,0.6);" data-tooltip="Double-click to insert Vocal Highlight tags"><i>Vocal Highlights</i></div>
+					<div class="editSample" ondblclick="wrapText('h')">&lt;h&gt;&nbsp;(High)</div>
+					<div class="editSample" ondblclick="wrapText('l')">&lt;l&gt;&nbsp;(Low)</div>
+					<div class="editSample" ondblclick="wrapText('u')">&lt;u&gt;&nbsp;(Unison)</div>
+					<div class="editSample" ondblclick="wrapText('a')">&lt;a&gt;&nbsp;(All)</div>
+					<div class="editSample" ondblclick="wrapText('b')">&lt;b&gt;&nbsp;(Both)</div>
+					<div class="editSample" ondblclick="wrapText('x')">&lt;x&gt;&nbsp;(Special)</div>
+				</td>
+			</tr>
+		</table>
+		<table id="buttonsTable">
+			<tr>
+				<td>
+					<button class="editBtn" id="chartEditorDialogLyricDump" data-tooltip="Create a .txt file containing Lyrics only - for validating slides" type="button" onclick="dumpLyrics();">Dump Lyrics</button>
+				</td>
+				<td>
+					<button class="editBtn" id="chartEditorDialogNewSong" data-tooltip="Populates the Editor with a Song template" type="button" onclick="newSong();">New Song</button>
+				</td>
+				<td>
+					<div id="openFileContainer">
+						<!--							When current file is unchanged-->
+						<label for="chartEditorDialogFileInput" class="editBtn" data-tooltip="Opens a File Selection Dialog with which to choose a file to open">Open</label>
+						<input type="file" id="chartEditorDialogFileInput" onchange="openFile(); this.value=null; return false;">
+						<!--							When current file is changed-->
+						<!--							<button class="editBtn" id="chartEditorDialogFileInput" data-tooltip="Opens a File Selection Dialog with which to choose a file to open" type="button" onclick="confirmOpenFile();">Open</button>-->
+					</div>
+				</td>
+				<td>
+					<button class="editBtn" id="chartEditorDialogSaveChordPro" data-tooltip="Save the Editor contents to a local drive as a .chordpro file" type="button" onclick="saveChordPro();">Save</button>
+				</td>
+				<td>
+					<button class="editBtn" id="chartEditorDialogDownloadPDF" data-tooltip="Save the current PDF to a local drive as a .PDF file" type="button" onclick="downloadLatestPDF();">Download PDF</button>
+				</td>
+			</tr>
+		</table>
+		<div id="errorOutputDiv">
+			<div data-tooltip="Displays errors in Editor - click to move Editor cursor to error"><input id="errorOutput" onclick="caretToError()" readonly></div>
+		</div>
+		<div class="version">Version: 11/11/2025 13:08:52</div>
+		<div class="version" id="currSizeInPts"></div>
+	</div>
+
+	<!-- The song chart PDF displays here -->
+	<div id="pdfContainer"></div>
+
+	<!-- The application documentation displays here -->
+	<div class="docsDiv" id="docsDiv">
+		<div class="docsHeader" id="docsButtonHeaderDiv">
+			<button class="editBtn" id="returnToEditorButton" data-tooltip="Return to the Editor" type="button" onclick="hideDocs();"><span class="large">←</span> Back</button>
+		</div>
+		<div class="spacer"></div>
+		<div class="spacer"></div>
+		<div class="spacer"></div>
+
+		<h1 class="textCenter">General Instructions</h1>
+
+		<div> &nbsp; When the app is opened, there are two areas of the screen that are relevant:</div>
+		<ul>
+			<li><b>The Editor.</b> This is used to edit a .chordpro file and to make various selections regarding the PDF that is produced from it.</li>
+			<li><b>The PDF viewer.</b> This displays the resulting PDF and provides assorted features (i.e. zoom, print, download, etc...) </li>
+		</ul>
+		<div> &nbsp; Each of these areas and their features will be addressed below.</div>
+
+		<p> &nbsp; </p>
+
+		<h3>What can I do in the Editor?</h3>
+		<ul>
+			<li><b>Dialog buttons:</b>
+				<ul>
+					<li>You can access these docs via the &#8505; button in the upper left corner</li>
+					<li>You can minimize/maximize the Editor via the <b>&#x25B2;</b> and <b>&#x25BC;</b> buttons</li>
+				</ul>
+			</li>
+			<li><b>Song Chart formatting options:</b>
+				<ul>
+					<li>You can select among [No Chords, NNS (scale degrees), the Original key, or any other key]</li>
+<!--					<li>You can select between Normal mode (chords over lyrics style) and Compact mode (chordpro style)</li>-->
+<!--					<li>You can select between Dark mode (black background, colored type) and Light mode (white background, black type)</li>-->
+					<li>You can toggle display of the Chord Durations.</li>
+					<li>You can toggle display of the Vocal Highlights.</li>
+				</ul>
+			</li>
+			<li><b>Editor options:</b>
+				<ul>
+					<li>You can drag a .chordpro file onto the editor dialog's text area (to open it)</li>
+					<li>You can edit the song in the editor dialog's text area</li>
+					<li>You can double-click an item in the 'Song Directives' list to quickly insert it at the current cursor position</li>
+					<li>You can double-click an item in the 'Vocal Highlights' lists to quickly insert it at the current cursor position  -or-  to quickly surround the selected text on a single line</li>
+					<li class="highlight"><i>The editor dialog's text area has a vertical line on the right side. This is a guide to gauge the target width for a line. The longest line of your song should be approximately that length. It is only a guide as each line of a song may have more chords, longer chord names, etc...</i></li>
+				</ul>
+			</li>
+			<li><b>Action buttons:</b>
+				<ul>
+					<li>You can save a 'lyrics only' text file of the song (Dump Lyrics button)</li>
+					<li>You can open a new song template (New Song button)</li>
+					<li>You can open an existing song on your local drive (Open button)</li>
+					<li>You can save your edits, i.e. the .chordpro file (Save button)</li>
+					<li>You can download the PDF (Download PDF button) (this is just a convenient shortcut)</li>
+				</ul>
+			</li>
+			<li><b>Error bar:</b>
+				<ul>
+					<li>Displays any errors found in the song</li>
+					<li>When an error appears, you can single-click this bar to move the edit cursor to the offending line</li>
+				</ul>
+			</li>
+		</ul>
+
+		<h3>What can I do in the PDF viewer?</h3>
+
+		<div> &nbsp; The PDF viewer is a component provided by the browser. As such, it may be slightly different on each OS and browser combination. You should be able to expect a few common features:</div>
+		<ul>
+			<li>Jump to Page</li>
+			<li>Zoom In/Out</li>
+			<li>Download (i.e. save as a local .pdf file)</li>
+			<li>Print</li>
+		</ul>
+
+		<div class="spacer"></div>
+		<div class="spacer"></div>
+		<div class="spacer"></div>
+		<h1 class="textCenter">List of ChordPro Directives</h1>
+
+		<h3><span class="highlight">Metadata</span> directives you should <span class="highlight">always include</span></h3>
+		<ul>
+			<li>{title:The Great Gatsby}</li>
+			<li>{key:G}</li>
+			<li>{time:4/4}</li>
+			<li>{tempo:82}</li>
+		</ul>
+
+		<h3><span class="highlight">Metadata</span> directives you <span class="highlight">may</span> choose to <span class="highlight">include</span></h3>
+		<ul>
+			<li>{capo:2}</li>
+		</ul>
+
+		<h3><span class="highlight">Song</span> directives you <span class="highlight">will</span> likely <span class="highlight">use</span></h3>
+		<ul>
+			<li>{comment:Micah 6:8}</li>
+			<li>{comment_italic:Acoustic Guitar Only}</li>
+			<li>{comment_box:Get 'em clapping!}</li>
+			<li>{start_of_verse:Verse 1} + {end_of_verse}</li>
+			<li>{start_of_bridge:Bridge 1} + {end_of_bridge}</li>
+			<li>{start_of_chorus:Chorus 1} + {end_of_chorus}</li>
+			<li>{verse:Verse 1}</li>
+			<li>{bridge:Bridge 1}</li>
+			<li>{chorus:Chorus 1}</li>
+			<li>{transpose:+1}</li>
+		</ul>
+
+		<h3><span class="highlight">Hiding Lines</span></h3>
+		<ul>
+			<li># (at beginning of line)</li>
+		</ul>
+
+		<div class="spacer"></div>
+		<div class="spacer"></div>
+		<div class="spacer"></div>
+		<h1 class="textCenter">Purpose and Usage of ChordPro Directives</h1>
+
+		<h3><span class="highlight">Metadata</span> directives</h3>
+		<h5>{title:The Great Gatsby}</h5>
+		<ul>
+			<li>This is the container for the title of the song</li>
+			<li>This should appear once at the top (before the song directives)</li>
+		</ul>
+
+		<h5>{key:G}</h5>
+		<ul>
+			<li>This is the container for the key of the song</li>
+			<li>This should appear once at the top (before the song directives)</li>
+		</ul>
+
+		<h5>{time:4/4}</h5>
+		<ul>
+			<li>This is the container for the time signature of the song</li>
+			<li>This should appear once at the top (before the song directives)</li>
+		</ul>
+
+		<h5>{tempo:82}</h5>
+		<ul>
+			<li>This is the container for the tempo (i.e. bpm) of the song</li>
+			<li>This should appear once at the top (before the song directives)</li>
+		</ul>
+
+		<h5>{capo:2}</h5>
+		<ul>
+			<li>This is the container for the capo position, presumably for an acoustic guitar</li>
+			<li>This may appear once (if applicable) at the top (before the song directives)</li>
+			<li>This has no functional value within the song - it is displayed as a reminder only</li>
+		</ul>
+
+		<div class="spacer"></div>
+		<div class="spacer"></div>
+		<h3><span class="highlight">Song</span> directives</h3>
+		<h5>{comment:Micah 6:8}</h5>
+		<ul>
+			<li>This is a container for a comment with 'normal' text</li>
+			<li>This displays unique from the chords and lyrics</li>
+			<li>This may appear (as its own line) anywhere in the song</li>
+			<li>There may be from zero to as many as you want</li>
+		</ul>
+
+		<h5>{comment_italic:Acoustic Guitar Only}</h5>
+		<ul>
+			<li>This is a container for a comment with 'italic' text</li>
+			<li>This displays unique from the chords and lyrics</li>
+			<li>This may appear (as its own line) anywhere in the song</li>
+			<li>There may be from zero to as many as you want</li>
+		</ul>
+
+		<h5>{comment_box:Get 'em clapping!}</h5>
+		<ul>
+			<li>This is a container for a comment with 'normal' text with a box around it</li>
+			<li>This displays unique from the chords and lyrics</li>
+			<li>This may appear (as its own line) anywhere in the song</li>
+			<li>There may be from zero to as many as you want</li>
+		</ul>
+
+		<h5>{start_of_verse:Verse 1} + {end_of_verse}</h5>
+		<ul>
+			<li>This combo associates a set of chords and lyrics as a single unit - a section</li>
+			<li>The '{start_of_verse:Verse 1}' must appear first, followed by chords, lyrics, comments, etc..., then followed by '{end_of_verse}'</li>
+			<li>Use of this combo makes the section available for use later in the song (without retyping - a section repeat)</li>
+			<li>The name ('Verse 1'), must be unique and acts as an ID for use with the '{verse:Verse 1}' repeat directive</li>
+			<li>Technically, this can be used for any section of music you wish - it is for verses by convention and for readability. The section header appears in 'normal' text.</li>
+		</ul>
+
+		<h5>{verse:Verse 1}</h5>
+		<ul>
+			<li>This section repeat directive allows for copying a previously defined section</li>
+			<li>The name, e.g. 'Verse 1', must match the name of a previously defined section of the '{start_of_verse:Verse 1} + {end_of_verse}' combo</li>
+		</ul>
+
+		<h5>{start_of_bridge:Bridge 1} + {end_of_bridge}</h5>
+		<ul>
+			<li>This combo associates a set of chords and lyrics as a single unit - a section</li>
+			<li>The '{start_of_verse:Bridge 1}' must appear first, followed by chords, lyrics, comments, etc..., then followed by '{end_of_bridge}'</li>
+			<li>Use of this combo makes the section available for use later in the song (without retyping - a section repeat)</li>
+			<li>The name ('Bridge 1'), must be unique and acts as an ID for use with the '{bridge:Bridge 1}' directive</li>
+			<li>Technically, this can be used for any section of music you wish - it is for bridges by convention and for readability. The section header appears as 'italic' text.</li>
+		</ul>
+
+		<h5>{bridge:Bridge 1}</h5>
+		<ul>
+			<li>This section repeat directive allows for copying a previously defined section</li>
+			<li>The name, e.g. 'Bridge 1', must match the name of a previously defined section of the '{start_of_bridge:Bridge 1} + {end_of_bridge}' combo</li>
+		</ul>
+
+		<h5>{start_of_chorus:Chorus 1} + {end_of_chorus}</h5>
+		<ul>
+			<li>This combo associates a set of chords and lyrics as a single unit - a section</li>
+			<li>The '{start_of_verse:Chorus 1}' must appear first, followed by chords, lyrics, comments, etc..., then followed by '{end_of_chorus}'</li>
+			<li>Use of this combo makes the section available for use later in the song (without retyping - a section repeat)</li>
+			<li>The name ('Chorus 1'), must be unique and acts as an ID for use with the '{chorus:Chorus 1}' directive</li>
+			<li>Technically, this can be used for any section of music - it is for choruses by convention and for readability. The section header appears as 'italic, underlined' text.</li>
+		</ul>
+
+		<h5>{chorus:Chorus 1}</h5>
+		<ul>
+			<li>This section repeat directive allows for copying a previously defined section</li>
+			<li>The name, e.g. 'Chorus 1', must match the name of a previously defined section of the '{start_of_chorus:Chorus 1} + {end_of_chorus}' combo</li>
+		</ul>
+
+		<h5>{transpose:+1}</h5>
+		<ul>
+			<li>This directive is used to transpose/modulate all chords that follow it within a song</li>
+			<li>The number must be preceded by a '+' or '-'.</li>
+			<li>The number is equal to a half step.</li>
+			<li>In the key of G, a '+2' would transpose to the key of A.</li>
+			<li>In the key of G, a '-4' would transpose to the key of Eb.</li>
+			<li>The chords that appear after this directive must remain in the original key - i.e. you don't transpose them. Following a '{transpose:+2}' directive, the chords G, C, and D will be transposed to A, D, and E for you</li>
+		</ul>
+
+		<div class="spacer"></div>
+		<div class="spacer"></div>
+		<h3>Miscellaneous</h3>
+		<h5>Section Header Comments</h5>
+		<ul>
+			<li>This feature allows for adding comments directly to the section header (i.e. on the same line)</li>
+			<li>These comments will not appear on section repeats (the repeat has its own comments)</li>
+			<li>The comments display in the same format as the {comment_italic} directive</li>
+			<li>This is available for:
+				<ul>
+					<li>{start_of_verse:Verse 1:A comment for this verse only}</li>
+					<li>{start_of_bridge:Bridge 1:A comment for this bridge only}</li>
+					<li>{start_of_chorus:Chorus 1:A comment for this chorus only}</li>
+					<li>{verse:Verse 1:A different comment than the original verse we are repeating}</li>
+					<li>{bridge:Bridge 1:A different comment than the original bridge we are repeating}</li>
+					<li>{chorus:Chorus 1:A different comment than the original chorus we are repeating}</li>
+				</ul>
+			</li>
+			<li>You can add multiple comments (separated by ':') - each additional comment will go on its own line. For example:
+				<ul>
+					<li>{start_of_verse:Verse 1:A comment that appears on the line with the section header:Another comment that appears on the next line}</li>
+				</ul>
+			</li>
+		</ul>
+
+		<h5>Hiding Lines</h5>
+		<ul>
+			<li>Sometimes, it is useful to hide lines of the .chordpro file. Any line of a song may be preceded by a '#' character. The app will completely ignore these lines (i.e. they will be hidden).</li>
+		</ul>
+
+
+
+		<div class="spacer"></div>
+		<div class="spacer"></div>
+		<div class="spacer"></div>
+		<h1 class="textCenter">Chords and Lyrics Formatting</h1>
+
+
+		<h3><span class="highlight">Chords</span></h3>
+		<ul>
+			<li>Technically, a chord (designated by opening and closing square brackets, i.e. []) can be any text. But, for usefulness, it should be used only for chords or common symbols (like [N.C.] for tacet, etc...)</li>
+			<li>Chords should be placed within the lyrics at the desired position. For example, "Because He [G]lives" is interpreted as putting the G chord directly above the beginning of the word "lives". "Because He [G] lives" (note the extra space) instead places the G chord between the words "He" and "lives".</li>
+			<li>Chords may also have duration indicators, i.e. a chord may be played for only an eighth note or for two whole notes (an eight count). This duration must be the last thing in the chord and must be preceded by an "@" symbol.</li>
+			<li>For example, [G]  [C]  [D]  [C]  [G] (a four bar phrase) might be made clearer by adding durations: [G@w]  [C@w]  [D@h]  [C@h]  [G@w]. The respective durations are 4 count, 4 count, 2 count, 2 count, 4 count.</li>
+			<li>The indicators may be strung together in any manner that makes sense (the app simply displays whatever is there).</li>
+			<li>Here are the duration indicators and what they mean:
+				<ul>
+					<li>w = Whole note</li>
+					<li>h = Half note</li>
+					<li>q = Quarter note</li>
+					<li>e = Eighth note</li>
+					<li>s = Sixteenth note</li>
+					<li>. = Dot (e.g. a <b>q.</b> is a dotted quarter note)</li>
+					<li>- = Tie (e.g. a <b>w-w</b> is two whole notes tied, an 8 count )</li>
+					<li>! = Stop (as in silence, e.g. a <b>q!</b> is a quarter note of silence)</li>
+					<li>~ = Fermata (hold until cue)</li>
+					<li>3 = Triplet (e.g. a <b>q3</b> is a quarter triplet)</li>
+				</ul>
+			</li>
+		</ul>
+
+		<h3><span class="highlight">Lyrics</span></h3>
+		<ul>
+			<li>Lyrics will simply appear as entered. The only thing to be careful of is using any special characters used in the rest of this specification.</li>
+			<li>You may designate any portion of any lyric to be color highlighted. To do this, insert any of the special tags (below) around the target text in the same manner as an html tag.</li>
+			<li>For example, "Because He [G]lives, I can face to[C]morrow" might become "Because He [G]lives, &lt;b&gt;I can face to[C]morrow&lt;/b&gt;". This adds both high and low harmony to the second half of the line.</li>
+			<li>Here are the available tags and what they mean:
+				<ul>
+					<li>&lt;h&gt;&lt;\h&gt; = high harmony (red)</li>
+					<li>&lt;l&gt;&lt;\l&gt; = low harmony (green)</li>
+					<li>&lt;b&gt;&lt;\b&gt; = both high & low harmony (purple)</li>
+					<li>&lt;u&gt;&lt;\u&gt; = unison (pink))</li>
+					<li>&lt;a&gt;&lt;\a&gt; = all harmony (orange)</li>
+					<li>&lt;x&gt;&lt;\x&gt; = special (yellow) (no specific meaning, defined by leader)</li>
+				</ul>
+			</li>
+		</ul>
+
+
+
+	</div>
+</div>
+
+<!-- A confirmation dialog -->
+<div id="confirmDialog" class="confirmDialog">
+	<div class="confirmDialogContent">
+		<div class="confirmDialogHeader">
+			<span class="confirmDialogClose" onclick="closeConfirmDialog();">&times;</span>
+			<h2 id="confirmDialogHeaderTitle">Modal Header</h2>
+		</div>
+		<div class="confirmDialogBody" id="confirmDialogBody">
+			<p>Some text in the Modal Body</p>
+			<p>Some other text...</p>
+		</div>
+		<div class="confirmDialogFooter" id="confirmDialogFooter">
+		</div>
+	</div>
+</div>
+
+</body>
+</html>
