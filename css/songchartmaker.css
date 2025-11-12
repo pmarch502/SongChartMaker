@@ -1,0 +1,683 @@
+body {
+	margin: 0px 0px 0px 0px;
+	font-family: 'Roboto', sans-serif;
+}
+
+textarea {
+	font-family: 'Inconsolata', monospace;
+}
+
+.highlight {
+	background-color: rgba(0,0,0,.1);
+}
+
+h5 {
+	margin-bottom: -12px;
+	color: mediumvioletred;
+}
+
+.spacer {
+	min-height: 12px;
+	max-height: 12px;
+}
+
+.pageBreak {
+	min-height: 1px;
+	max-height: 1px;
+	background-color: rgb(128,128,128);
+	position: absolute;
+	width: 816px;
+}
+
+[data-tooltip]:hover::after {
+	display: block;
+	position: absolute;
+	content: attr(data-tooltip);
+	border: 1px solid black;
+	background-color: rgb(128,128,128);
+	color: black;
+	font-family: 'Roboto', sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	padding: 5px;
+	z-index: 10000;
+}
+
+#pdfContainer {
+	width: 1024px;
+	height: 1200px;
+}
+
+
+
+
+
+
+
+
+#editorButton {
+	position: fixed;
+	top: 10px;
+	left: 0px;
+	margin: 10px;
+	color: slategrey;
+}
+
+#docsDiv {
+	min-width: 1014px;
+	max-width: 1014px;
+	padding-left: 10px;
+	min-height: 1325px;
+	display: block;
+	background-color: rgb(255,255,248);
+	color: black;
+	z-index: 2;
+	font-family: 'Roboto', sans-serif;
+	display: block;
+}
+
+.large {
+	font-size: 24px;
+}
+
+#editDiv {
+	min-width: 1024px;
+	max-width: 1024px;
+	border-radius: 16px;
+	border-width: 2px;
+	border-style: solid;
+	border-color: slategrey;
+	display: block;
+	font-family: 'Roboto', sans-serif;
+	background-color: black;
+	color: rgba(255,255,0,.6);
+}
+
+.editDivClose {
+	color: grey;
+	float: right;
+	font-size: 32px;
+	font-weight: bold;
+	margin-right: 10px;
+}
+
+.editDivClose:hover,
+.editDivClose:focus {
+	color: white;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.editDivDocs {
+	color: rgba(255,255,0,.6);
+	background-color: rgb(48,48,48);
+	border-radius: 25px;
+	float: left;
+	font-size: 28px;
+	font-weight: bold;
+	margin-left: 10px;
+}
+
+.editDivDocs:hover,
+.editDivDocs:focus {
+	color: yellow;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.docsHeader {
+	background-color: rgb(255,255,248);
+	min-width: 1014px;
+	max-width: 1014px;
+	width: 100%;
+	padding-left: 10px;
+	position: fixed;
+	padding-bottom: 10px;
+}
+
+#chartEditorTextArea {
+	background-color: rgb(32,32,32);
+	color: white;
+	display: block;
+	margin: 20px auto;
+}
+
+.editorDiv {
+	width: fit-content;
+	padding: 0;
+	position: relative;
+}
+
+.editor-separator {
+	width: 1px;
+	top: 0;
+	bottom: 4px;
+	background-color: rgb(200,200,200);
+	position: absolute;
+	box-shadow: 2px 0px 5px;
+}
+
+.editSample {
+	color:darkgrey;
+}
+
+#optionsTable {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#optionsTable tr,
+#optionsTable th,
+#optionsTable td {
+	padding: 0px 75px;
+}
+
+#chordKeySelect {
+	font-family: 'Roboto', sans-serif;
+}
+
+#buttonsTable {
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 15px;
+}
+
+#buttonsTable tr,
+#buttonsTable th,
+#buttonsTable td {
+	padding: 0px 25px 10px 25px;
+}
+
+#editTable {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#editTable tr,
+#editTable th,
+#editTable td {
+	padding: 0px 15px;
+}
+
+#errorOutput {
+	font-family: 'Roboto', sans-serif;
+	background-color: rgba(125,0,0,.75);
+	color: white;
+	width: 950px;
+}
+
+#errorOutputDiv {
+	text-align: center;
+}
+
+.version {
+	text-align: center;
+	margin-top: 10px;
+	color: rgba(255,255,0,.3);
+}
+
+
+
+
+
+
+
+
+
+
+
+.pre {
+	white-space: pre;
+}
+
+.capoMargin {
+	position: relative;
+	top: -7px;
+}
+
+.commentBoxMargin {
+	position: relative;
+	top: -4px;
+}
+
+.textCenter {
+	text-align: center;
+}
+
+.small {
+	font-size: 70%;
+}
+
+.editBtn {
+	background-color: slategrey;
+	border: none;
+	border-radius: 12px;
+	color: black;
+	padding: 10px 25px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-family: 'Roboto', sans-serif;
+	font-size: 16px;
+}
+.editBtn:hover {
+	background-color: darkgrey;
+	color: black;
+}
+
+input[type="file"] {
+	display: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.welcomeTitle {
+	color: rgb(192,192,192);
+	background-color: rgb(255,255,248);
+	font-size: 36px;
+	font-family: 'Roboto', sans-serif;
+	text-align: center;
+}
+
+div.welcomeDiv {
+	text-align: center;
+}
+
+ul.welcomeUl {
+	display: inline-block;
+	text-align: left;
+}
+
+.welcome {
+	color: rgb(192,192,192);
+	background-color: rgb(255,255,248);
+	font-size: 28px;
+	font-family: 'Roboto', sans-serif;
+	padding-bottom: 25px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.songDiv_lite {
+	background-color: rgb(255,255,248);
+	color: black;
+}
+
+.title_lite {
+	color: black;
+	background-color: rgb(255,255,248);
+	text-align: center;
+	font-weight: bold;
+}
+
+.fontSize_lite {
+	color: rgb(255,255,248);
+	background-color: rgb(255,255,248);
+	text-align: center;
+	font-weight: bold;
+}
+
+.fontSize_lite:hover {
+	color: black;
+}
+
+.section_lite {
+	color: black;
+	background-color: rgb(200,200,200);
+}
+
+.chord_lite {
+	color: black;
+	background-color: rgb(255,255,248);
+	margin-left: 20px;
+	font-weight: bold;
+}
+
+.chord2_lite {
+	color: black;
+	background-color: rgb(255,255,248);
+	font-weight: bold;
+}
+
+.chordType_lite {
+	color: black;
+	background-color: rgb(255,255,248);
+	font-style: italic;
+	/*font-size: 80%;*/
+	vertical-align: top;
+	font-weight: bold;
+}
+
+.slash_lite {
+	color: black;
+	background-color: rgb(255,255,248);
+	font-weight: bold;
+}
+
+.lyric_lite {
+	color: black;
+	background-color: rgb(255,255,248);
+	margin-left: 20px;
+}
+
+.comment_lite {
+	color: rgb(0,0,0);
+	background-color: rgb(184,128,128);
+	font-size: 80%;
+	margin-left: 20px;
+	padding: 0 5px 1px 5px;
+}
+
+.comment_italic_lite {
+	color: rgb(0,0,0);
+	background-color: rgb(184,128,128);
+	font-style: italic;
+	font-size: 80%;
+	margin-left: 20px;
+	padding: 0 5px 1px 5px;
+}
+
+.comment_box_lite {
+	color: rgb(0,0,0);
+	background-color: rgb(184,128,128);
+	border-color: rgb(64,64,64);
+	border-style: solid;
+	border-width: 4px;
+	font-size: 80%;
+	margin-left: 20px;
+	padding: 0 5px 1px 5px;
+}
+
+.capo_lite {
+	color: rgb(48,48,48);
+	background-color: orangered;
+	border-color: rgb(48,48,48);
+	border-style: solid;
+	border-width: 4px;
+	font-size: 70%;
+	margin-left: 20px;
+	padding: 0 5px 1px 5px;
+}
+
+.verse_lite {
+	color: black;
+	background-color: rgb(200,200,200);
+	font-weight: bold;
+	/*margin-left: 20px;*/
+}
+
+.bridge_lite {
+	color: black;
+	background-color: rgb(200,200,200);
+	font-style: italic;
+	font-weight: bold;
+	/*margin-left: 20px;*/
+}
+
+.chorus_lite {
+	color: black;
+	background-color: rgb(200,200,200);
+	text-decoration: underline;
+	font-style: italic;
+	font-weight: bold;
+	/*margin-left: 20px;*/
+}
+
+.empty_lite {
+	color: black;
+	background-color: rgb(255,255,248);
+	margin-left: 20px;
+}
+
+.transpose_lite {
+	color: black;
+	background-color: rgb(128,128,128);
+	border-color: rgb(184,0,0);
+	border-style: solid;
+	border-width: 4px;
+	font-size: 80%;
+	margin-left: 20px;
+	padding: 0 5px 1px 5px;
+}
+
+
+
+
+
+
+
+
+
+
+.songDiv_dark {
+	background-color: black;
+	color: yellow;
+}
+
+.title_dark {
+	color: rgb(160,160,160);
+	text-align: center;
+}
+
+.section_dark {
+	color: rgb(228,228,0);
+	background-color: rgb(56,56,56);
+}
+
+.chord_dark {
+	color: rgb(0,205,205);
+	margin-left: 20px;
+}
+
+.chord2_dark {
+	color: rgb(0,205,205);
+}
+
+.chordType_dark {
+	color: rgb(255,140,0);
+	font-style: italic;
+	/*font-size: 80%;*/
+	vertical-align: top;
+}
+
+.slash_dark {
+	color: rgb(0, 125, 125);
+}
+
+.lyric_dark {
+	color: rgb(228,228,0);
+	margin-left: 20px;
+}
+
+.comment_dark {
+	background-color: rgb(104,48,48);
+	font-size: 80%;
+	color: rgb(184,184,184);
+	margin-left: 20px;
+	padding: 0 5px 1px 5px;
+}
+
+.comment_italic_dark {
+	background-color: rgb(104,48,48);
+	font-style: italic;
+	font-size: 80%;
+	color: rgb(184,184,184);
+	margin-left: 20px;
+	padding: 0 5px 1px 5px;
+}
+
+.comment_box_dark {
+	border-style: solid;
+	border-width: 4px;
+	border-color: rgb(128,128,128);
+	background-color: rgb(104,48,48);
+	font-size: 80%;
+	color: rgb(184,184,184);
+	margin-left: 20px;
+	padding: 0 5px 1px 5px;
+}
+
+.capo_dark {
+	border-style: solid;
+	border-width: 4px;
+	border-color: rgb(64,64,64);
+	background-color: #e0a800;
+	font-size: 70%;
+	color: rgb(48,48,48);
+	margin-left: 20px;
+	padding: 0 5px 1px 5px;
+}
+
+.verse_dark {
+	font-weight: bold;
+	color: rgb(228,228,228);
+	background-color: rgb(80,80,80);
+}
+
+.bridge_dark {
+	font-style: italic;
+	font-weight: bold;
+	color: rgb(228,228,228);
+	background-color: rgb(80,80,80);
+}
+
+.chorus_dark {
+	text-decoration: underline;
+	font-style: italic;
+	font-weight: bold;
+	color: rgb(228,228,228);
+	background-color: rgb(80,80,80);
+}
+
+.empty_dark {
+	color: rgb(228,228,228);
+	margin-left: 20px;
+}
+
+.transpose_dark {
+	border-style: solid;
+	border-width: 4px;
+	border-color: darkred;
+	background-color: rgb(48,48,48);
+	font-size: 80%;
+	color: rgb(128,128,128);
+	margin-left: 20px;
+	padding: 0 5px 1px 5px;
+}
+
+
+
+
+
+
+
+
+
+
+/* The Modal (background) */
+.confirmDialog {
+	display: none; /* Hidden by default */
+	position: fixed; /* Stay in place */
+	z-index: 1; /* Sit on top */
+	padding-top: 100px; /* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0,0,0); /* Fallback color */
+	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.confirmDialogContent {
+	position: relative;
+	background-color: #fefefe;
+	margin: auto;
+	padding: 0;
+	border: 1px solid #888;
+	width: 80%;
+	max-width: 750px;
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+	-webkit-animation-name: animatetop;
+	-webkit-animation-duration: 0.4s;
+	animation-name: animatetop;
+	animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+	from {top:-300px; opacity:0}
+	to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+	from {top:-300px; opacity:0}
+	to {top:0; opacity:1}
+}
+
+/* The Close Button */
+.confirmDialogClose {
+	color: grey;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+}
+
+.confirmDialogClose:hover,
+.confirmDialogClose:focus {
+	color: white;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.confirmDialogHeader {
+	padding: 2px 16px;
+	background-color: black;
+	color: rgb(210,210,210);
+	font-family: 'Roboto', sans-serif;
+}
+
+.confirmDialogBody {
+	background-color: rgb(32,32,32);
+	color: darkgrey;
+	padding: 2px 16px;
+	font-family: 'Roboto', sans-serif;
+}
+
+.confirmDialogFooter {
+	padding: 2px 16px;
+	background-color: black;
+	color: white;
+	font-family: 'Roboto', sans-serif;
+}
+
+.confirmDialogTable {
+	margin-left: auto;
+}
+
+.confirmDialogTable tr,
+.confirmDialogTable th,
+.confirmDialogTable td {
+	padding: 15px 10px 15px 10px;
+}
+
